@@ -1,0 +1,149 @@
+blueprint:
+  name: Toggle Covers(s) with Ring Keypad
+  description: Toggles a cover (e.g., a garage door) when a valid code is entered on a Ring keypad.
+  domain: automation
+  input:
+    ring_keypad:
+      name: Keypad Device
+      description: The device entry for the Ring keypad.
+      selector:
+        device:
+          manufacturer: Ring
+          integration: zwave_js
+
+    cover_entity:
+      name: Garage Door
+      description: Select the cover entity to toggle with the keypad.
+      selector:
+        entity:
+          domain: cover
+
+    cover_trigger_event:
+      name: Keypad button for Garage Door
+      description: Select the keypad event to operate Garage Door 1.
+      selector:
+        select:
+          options:
+            - value: "code_entered"
+              label: "Check Mark"
+            - value: "keypad_disarm"
+              label: "Disarm"
+            - value: "keypad_arm_home"
+              label: "Arm Home"
+            - value: "keypad_arm_away"
+              label: "Arm Away"
+
+    selected_action_police:
+      name: Selected Action Police
+      description: Select the action for Police Button
+      default: []
+      selector:
+        action: {}
+    selected_action_fire:
+      name: Selected Action Fire
+      description: Select the action for Fire Button
+      default: []
+      selector:
+        action: {}
+    selected_action_medical:
+      name: Selected Action Medical
+      description: Select the action for Medical Button
+      default: []
+      selector:
+        action: {}
+        
+trigger:
+  - platform: event
+    event_type: zwave_js_notification
+    event_data:
+      device_id: !input ring_keypad
+      command_class: 111
+      event_type: 2
+    id: code_entered
+
+  - platform: event
+    event_type: zwave_js_notification
+    event_data:
+      device_id: !input ring_keypad
+      command_class: 111
+      event_type: 3
+    id: keypad_disarm
+
+  - platform: event
+    event_type: zwave_js_notification
+    event_data:
+      device_id: !input ring_keypad
+      command_class: 111
+      event_type: 6
+    id: keypad_arm_home
+
+  - platform: event
+    event_type: zwave_js_notification
+    event_data:
+      device_id: !input ring_keypad
+      command_class: 111
+      event_type: 5
+    id: keypad_arm_away
+
+  - platform: event
+    event_type: zwave_js_notification
+    event_data:
+      device_id: !input ring_keypad
+      command_class: 111
+      event_type: 17
+    id: keypad_police
+
+  - platform: event
+    event_type: zwave_js_notification
+    event_data:
+      device_id: !input ring_keypad
+      command_class: 111
+      event_type: 16
+    id: keypad_fire
+
+  - platform: event
+    event_type: zwave_js_notification
+    event_data:
+      device_id: !input ring_keypad
+      command_class: 111
+      event_type: 19
+    id: keypad_medical
+
+variables:
+  cover_trigger_event_var: !input cover_trigger_event
+  valid_codes: >
+    {{ states.sensor
+      | selectattr('entity_id', 'search', '_code_slot_') 
+      | selectattr('state', '!=', 'unknown')  
+      | selectattr('state', '!=', '')  
+      | map(attribute='state') 
+      | list }}
+
+condition:
+  - condition: template
+    value_template: >
+      {% set submitted_code = trigger.event.data['event_data'] %}
+      {{ submitted_code in valid_codes }}
+
+action:
+  - choose:
+      - conditions:
+          - condition: template
+            value_template: "{{ trigger.id == cover_trigger_event_var }}"
+        sequence:
+          - service: cover.toggle
+            target:
+              entity_id: !input cover_entity
+      - conditions:
+          - condition: trigger
+            id: keypad_fire
+        sequence: !input selected_action_fire
+      - conditions:
+          - condition: trigger
+            id: keypad_police
+        sequence: !input selected_action_police
+      - conditions:
+          - condition: trigger
+            id: keypad_medical
+        sequence: !input selected_action_medical
+mode: single
