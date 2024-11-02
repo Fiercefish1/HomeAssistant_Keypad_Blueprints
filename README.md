@@ -11,6 +11,7 @@ There are two flavors:
 
    [![Add Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)]( https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A//github.com/Fiercefish1/RingKeypad_GarageDoorOpener/blob/main/GarageDoorKeypad_String.yaml)
 
+*This was created with inspiration from blueprints created by [@imsorrybutwho](https://github.com/ImSorryButWho/HomeAssistantNotes) for using Ring keypads with the Alarmo integration.  
 
 ## Features
 * Toggles any cover (e.g. garage door) when a valid code is provided
