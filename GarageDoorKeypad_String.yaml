@@ -25,8 +25,8 @@ blueprint:
           domain: cover
 
     cover_trigger_event:
-      name: Keypad button for Garage Door
-      description: Select the keypad event to operate the Garage Door.
+      name: Keypad button for garage door
+      description: Select the keypad event to operate the garage door.
       selector:
         select:
           options:
@@ -59,6 +59,9 @@ blueprint:
       default: []
       selector:
         action: {}
+
+        
+  source_url: https://github.com/Fiercefish1/RingKeypad_GarageDoorOpener/blob/main/GarageDoorKeypad_Keymaster.yaml
 
 trigger:
   - platform: event
