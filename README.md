@@ -7,13 +7,13 @@ There are two flavors:
 
 ## Features
 * Toggles any cover (e.g. garage door) when a valid code is provided
-* Choose which button/s toggle the cover after valid code entry (e.g Disarm button - Left garage door, Armed Home - Right garage door)
-* Uses existing user/code management from Keymaster
+* Choose which button/s toggle the cover after valid code entry (e.g Disarm button opens door #1, Armed Home buttom opens door #2)
+* Can use existing users and codes from Keymaster
 * Can be configured multiple times to control multiple garage doors
 * Create your own custom actions for Fire, Police, Medical buttons (must be held for three seconds)
 
 ## Prerequisites
-1. A Ring Keypad V2 connected via Zwave integration in Home Assistant
+1. A Ring Keypad V2 connected via Z-wave to Home Assistant
 2. A cover that you want to control.
 
 ## Installation
@@ -36,9 +36,7 @@ Copy the `RingKeypad_GarageDoorOpener/GarageDoorKeypad_Keymaster.yaml` or `RingK
 WIth the help of some velcro, minus the back plate, the keypad fits perfectly inside of [this dual-gang weather proof cover](https://www.amazon.com/gp/product/B001JEPX5I) (B001JEPX5I | $9 on Amzn). 
 
 
+![Alt Text](keypad-box-2.jpg)
+![Alt Text](keypad-box-1.jpg)
+![Alt Text](keypad-in-box.jpg)
 
-
-[hacs]: https://hacs.xyz
-[hacsbadge]: https://img.shields.io/badge/HACS-Default-41BDF5.svg?style=for-the-badge
-[releases-shield]: https://img.shields.io/github/v/release/Fiercefish1/zigbee-lock-manager.svg?style=for-the-badge
-[releases]: https://github.com/Fiercefish1/Zigbee-Lock-Manager/releases
