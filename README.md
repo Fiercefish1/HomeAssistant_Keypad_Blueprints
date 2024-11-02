@@ -38,5 +38,6 @@ WIth the help of some velcro, minus the back plate, the keypad fits perfectly in
 
 ![Alt Text](keypad-box-2.jpg)
 ![Alt Text](keypad-box-1.jpg)
-![Alt Text](keypad-in-box.jpg)
+![Alt Text](keypad-box.jpg)
+![Alt Text](keypad-in-box.jpeg)
 
