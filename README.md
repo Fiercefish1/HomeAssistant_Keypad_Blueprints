@@ -10,8 +10,6 @@ Home Assistant blueprints to easily configure a Ring Keypad V2 as an external ke
 
  [![Add Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)]( https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A//raw.githubusercontent.com/Fiercefish1/RingKeypad_GarageDoorOpener/refs/heads/main/keypad_alarmo_keymaster.yaml)
 
- https://raw.githubusercontent.com/Fiercefish1/RingKeypad_GarageDoorOpener/refs/heads/main/keypad_alarmo_keymaster.yaml
-
  
 ## Garage Door Opener Blueprints
   
