@@ -121,21 +121,34 @@ variables:
       | map(attribute='state') 
       | list }}
 
-condition:
-  - condition: template
-    value_template: >
-      {% set submitted_code = trigger.event.data['event_data'] %}
-      {{ submitted_code in valid_codes }}
 
 action:
   - choose:
       - conditions:
           - condition: template
             value_template: "{{ trigger.id == cover_trigger_event_var }}"
+          - condition: template
+            value_template: >
+              {% set submitted_code = trigger.event.data['event_data'] %}
+              {{ submitted_code in valid_codes }}
         sequence:
           - service: cover.toggle
             target:
               entity_id: !input cover_entity
+      - conditions:
+          - condition: template
+            value_template: >
+              {% set submitted_code = trigger.event.data['event_data'] %}
+              {{ submitted_code not in valid_codes }}
+        sequence:
+          - service: zwave_js.multicast_set_value
+            data:
+              command_class: "135"
+              endpoint: "0"
+              property: "9"
+              property_key: "1"
+              value: 100
+              device_id: !input ring_keypad
       - conditions:
           - condition: trigger
             id: keypad_fire
