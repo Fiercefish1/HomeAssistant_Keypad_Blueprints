@@ -5,6 +5,11 @@ Home Assistant blueprints to easily configure a Ring Keypad V2 as an external ke
 *These blueprints were derived from the great work by [@imsorrybutwho](https://github.com/ImSorryButWho/HomeAssistantNotes) for Ring keypads with the Alarmo integration.  
 
 
+### Keypad Performance
+* By default the motion detector in the keypad has a reset timer of two seconds, which can cause it to flood the zwave network and make the keypad appear to have connection issues.  To address this you need  to go to the device page and update the configuration for parameter 26 Motion Sensor Timeout with a larger number (e.g. 30). 
+* For the best connection, you'll want the keypad connected direcrtly to the controller rather than hopping through other zwave relays (if possible). 
+
+
 ## Alarmo + Keymaster Blueprint
 **Alarmo keypad with Keymaster** - Instead of having to manage two sets of codes for users in Alarmo and Keymaster, this blueprint will validate any code input events on the keypad against active Keyaster codes before executing the desired alarm action. 
 
