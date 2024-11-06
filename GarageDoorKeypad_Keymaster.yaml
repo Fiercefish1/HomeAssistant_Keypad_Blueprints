@@ -1,15 +1,21 @@
 blueprint:
-  name: Toggle Covers(s) with Ring Keypad
-  description: Toggles a cover (e.g., a garage door) when a valid code is entered on a Ring keypad.
+  name: Ring Keypad Automations for Garage Door (Keymaster or Custom Codes)
+  description: "# Configure Ring Keypad V2 to control garage doors\n This blueprint allows you to use either Keymaster or custom codes for validation. 
+    If using Keymaster, any codes that are active (enabled and/or active per schedule, if present) will toggle the garage door.\n Otherwise, if no
+    Keymaster code sensor entities are present, then keypad inputs will be validated against the codes provided as a string in the blueprint.\n
+    If you have more than one garage door or cover to control, you can configure the blueprint multiple times.  \n
+    https://github.com/Fiercefish1/RingKeypad_Blueprints"
+  source_url: https://github.com/Fiercefish1/RingKeypad_Blueprints/blob/main/GarageDoorKeypad_Keymaster.yaml
   domain: automation
   input:
-    ring_keypad:
+    keypad:
       name: Keypad Device
-      description: The device entry for the Ring keypad.
+      description: The device entry for the Ring keypad
       selector:
         device:
           manufacturer: Ring
           integration: zwave_js
+          multiple: false
 
     cover_entity:
       name: Garage Door
@@ -18,9 +24,16 @@ blueprint:
         entity:
           domain: cover
 
+    custom_codes:
+      name: Custom Codes (if not using Keymaster)
+      description: "Enter a comma-separated list of valid codes to use if not using Keymaster. No spaces.\n example: 1234,5678,9012"
+      default: ""
+      selector:
+        text:
+
     cover_trigger_event:
-      name: Keypad button for garage door
-      description: Select the keypad event to operate the garage door.
+      name: Keypad button for Garage Door
+      description: Select the keypad event to operate the Garage Door.
       selector:
         select:
           options:
@@ -52,37 +65,38 @@ blueprint:
       selector:
         action: {}
 
-  source_url: https://github.com/Fiercefish1/RingKeypad_GarageDoorOpener/blob/main/GarageDoorKeypad_Keymaster.yaml
-        
+mode: parallel
+max: 10
+
 trigger:
   - platform: event
     event_type: zwave_js_notification
     event_data:
-      device_id: !input ring_keypad
       command_class: 111
+      device_id: !input keypad
       event_type: 2
     id: code_entered
 
   - platform: event
     event_type: zwave_js_notification
     event_data:
-      device_id: !input ring_keypad
       command_class: 111
+      device_id: !input keypad
       event_type: 3
     id: keypad_disarm
 
   - platform: event
     event_type: zwave_js_notification
     event_data:
-      device_id: !input ring_keypad
       command_class: 111
+      device_id: !input keypad
       event_type: 6
     id: keypad_arm_home
 
   - platform: event
     event_type: zwave_js_notification
     event_data:
-      device_id: !input ring_keypad
+      device_id: !input keypad
       command_class: 111
       event_type: 5
     id: keypad_arm_away
@@ -90,7 +104,7 @@ trigger:
   - platform: event
     event_type: zwave_js_notification
     event_data:
-      device_id: !input ring_keypad
+      device_id: !input keypad
       command_class: 111
       event_type: 17
     id: keypad_police
@@ -98,7 +112,7 @@ trigger:
   - platform: event
     event_type: zwave_js_notification
     event_data:
-      device_id: !input ring_keypad
+      device_id: !input keypad
       command_class: 111
       event_type: 16
     id: keypad_fire
@@ -106,59 +120,65 @@ trigger:
   - platform: event
     event_type: zwave_js_notification
     event_data:
-      device_id: !input ring_keypad
+      device_id: !input keypad
       command_class: 111
       event_type: 19
     id: keypad_medical
 
+
 variables:
   cover_trigger_event_var: !input cover_trigger_event
+  # Check if Keymaster codes are available; if not, use custom codes
   valid_codes: >
-    {{ states.sensor
+    {% set keymaster_codes = states.sensor
       | selectattr('entity_id', 'search', '_code_slot_') 
       | selectattr('state', '!=', 'unknown')  
       | selectattr('state', '!=', '')  
       | map(attribute='state') 
-      | list }}
+      | list %}
+    {{ keymaster_codes if keymaster_codes else custom_codes.split(',') | map('trim') | list }}
 
 
 action:
-  - choose:
-      - conditions:
-          - condition: template
-            value_template: "{{ trigger.id == cover_trigger_event_var }}"
-          - condition: template
-            value_template: >
-              {% set submitted_code = trigger.event.data['event_data'] %}
-              {{ submitted_code in valid_codes }}
-        sequence:
-          - service: cover.toggle
-            target:
-              entity_id: !input cover_entity
-      - conditions:
-          - condition: template
-            value_template: >
-              {% set submitted_code = trigger.event.data['event_data'] %}
-              {{ submitted_code not in valid_codes }}
-        sequence:
-          - service: zwave_js.multicast_set_value
-            data:
-              command_class: "135"
-              endpoint: "0"
-              property: "9"
-              property_key: "1"
-              value: 100
-              device_id: !input ring_keypad
-      - conditions:
-          - condition: trigger
-            id: keypad_fire
-        sequence: !input selected_action_fire
-      - conditions:
-          - condition: trigger
-            id: keypad_police
-        sequence: !input selected_action_police
-      - conditions:
-          - condition: trigger
-            id: keypad_medical
-        sequence: !input selected_action_medical
-mode: single
+  choose:
+    # Valid code actions
+    - conditions:
+        - condition: template
+          value_template: "{{ trigger.id == cover_trigger_event_var }}"
+        - condition: template
+          value_template: >
+            {% set submitted_code = trigger.event.data['event_data'] %}
+            {{ submitted_code in valid_codes }}
+      sequence:
+        - service: cover.toggle
+          target:
+            entity_id: !input cover_entity
+
+    # Invalid code actions
+    - conditions: 
+        - condition: template
+          value_template: >
+            {% set submitted_code = trigger.event.data['event_data'] %}
+            {{ submitted_code not in valid_codes }}
+      sequence:
+        - service: zwave_js.multicast_set_value
+          data:
+            command_class: "135"
+            endpoint: "0"
+            property: "9"
+            property_key: "1"
+            value: 100
+            device_id: !input keypad
+    
+    - conditions:
+        - condition: trigger
+          id: keypad_fire
+      sequence: !input selected_action_fire
+    - conditions:
+        - condition: trigger
+          id: keypad_police
+      sequence: !input selected_action_police
+    - conditions:
+        - condition: trigger
+          id: keypad_medical
+      sequence: !input selected_action_medical
