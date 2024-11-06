@@ -13,7 +13,7 @@ Home Assistant blueprints to easily configure a Ring Keypad V2 as an external ke
 ## Alarmo + Keymaster Blueprint
 **Alarmo keypad with Keymaster** - Instead of having to manage two sets of codes for users in Alarmo and Keymaster, this blueprint will validate any code input events on the keypad against active Keyaster codes before executing the desired alarm action. 
 
- [![Add Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)]( https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A//raw.githubusercontent.com/Fiercefish1/RingKeypad_GarageDoorOpener/refs/heads/main/keypad_alarmo_keymaster.yaml)
+ [![Add Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)]( https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A//raw.githubusercontent.com/Fiercefish1/RingKeypad_Blueprints/refs/heads/main/keypad_alarmo_keymaster.yaml)
 
  
 ## Garage Door Opener Blueprint
