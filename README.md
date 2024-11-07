@@ -1,6 +1,6 @@
-# Ring Keypad Blueprints for Home Assistant
+# Keypad Blueprints for Home Assistant
 
-Home Assistant blueprints to easily configure a Ring Keypad V2 as an external keypad for operating your garage door, or controlling the Alarmo integeation using user-codes managed by Keymaster. 
+Home Assistant blueprints to easily configure a either the keypad dashboard cards, or a physical Ring Keypad V2 to use Keymaster user-codes to control your Alarmo integration or a garage door (aka cover).
 
 *These blueprints were derived from the great work by [@imsorrybutwho](https://github.com/ImSorryButWho/HomeAssistantNotes) for Ring keypads with the Alarmo integration.  
 
