@@ -75,7 +75,7 @@ action:
                     data:
                       name: "Alarmo"
                       message: >
-                        {% set matched_slot = states.input_text
+                        {% set matched_slot = states.sensor
                                             | selectattr('entity_id', 'search', '_code_slot_')
                                             | selectattr('state', 'eq', trigger.event.data.service_data.code)
                                             | map(attribute='entity_id')
@@ -90,7 +90,7 @@ action:
                     data:
                       name: "Alarmo"
                       message: >
-                        {% set matched_slot = states.input_text
+                        {% set matched_slot = states.sensor
                                             | selectattr('entity_id', 'search', '_code_slot_')
                                             | selectattr('state', 'eq', trigger.event.data.service_data.code)
                                             | map(attribute='entity_id')
