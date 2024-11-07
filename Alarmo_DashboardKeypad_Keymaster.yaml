@@ -31,8 +31,8 @@ action:
           - condition: template
             value_template: >
               {% set submitted_code = trigger.event.data.service_data.code %}
-              {% set valid_codes = states.input_text 
-                                   | selectattr('entity_id', 'search', '_lock_code_') 
+              {% set valid_codes = states.sensor 
+                                   | selectattr('entity_id', 'search', '_code_slot_') 
                                    | selectattr('state', '!=', 'unknown')  
                                    | selectattr('state', '!=', '') 
                                    | map(attribute='state') 
