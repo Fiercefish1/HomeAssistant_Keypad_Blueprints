@@ -76,7 +76,7 @@ action:
                       name: "Alarmo"
                       message: >
                         {% set matched_slot = states.input_text
-                                            | selectattr('entity_id', 'search', '_lock_code_')
+                                            | selectattr('entity_id', 'search', '_code_slot_')
                                             | selectattr('state', 'eq', trigger.event.data.service_data.code)
                                             | map(attribute='entity_id')
                                             | first %}
@@ -91,7 +91,7 @@ action:
                       name: "Alarmo"
                       message: >
                         {% set matched_slot = states.input_text
-                                            | selectattr('entity_id', 'search', '_lock_code_')
+                                            | selectattr('entity_id', 'search', '_code_slot_')
                                             | selectattr('state', 'eq', trigger.event.data.service_data.code)
                                             | map(attribute='entity_id')
                                             | first %}
