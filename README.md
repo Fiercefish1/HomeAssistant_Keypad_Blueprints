@@ -10,13 +10,19 @@ Home Assistant blueprints to easily configure a Ring Keypad V2 as an external ke
 * For the best connection, you'll want the keypad connected directly to the controller rather than hopping through other zwave relays (if possible). 
 
 
-## Alarmo + Keymaster Blueprint
-**Alarmo keypad with Keymaster** - Instead of having to manage two sets of codes for users in Alarmo and Keymaster, this blueprint will validate any code input events on the keypad against active Keyaster codes before executing the desired alarm action. 
+## Alarmo + Keymaster | Ring Keypad 
+**Alarmo ring keypad with Keymaster** - Instead of having to manage two sets of codes for users in Alarmo and Keymaster, this blueprint will validate any code input events on the keypad against active Keyaster codes before executing the desired alarm action. 
 
  [![Add Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)]( https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A//raw.githubusercontent.com/Fiercefish1/RingKeypad_Blueprints/refs/heads/main/keypad_alarmo_keymaster.yaml)
 
+## Alarmo + Keymaster | Dashboard Keypad Card 
+**Alarmo lovelace keypad card with Keymaster** - This blueprint allows you to use Keymaster codes on the digital keypad for the alarm card or the custom:Alarmo card, to controll your Alarmo alarm. 
+
+ [![Add Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)]( https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A//raw.githubusercontent.com/Fiercefish1/RingKeypad_Blueprints/refs/heads/main/Alarmo_DashboardKeypad_Keymaster.yaml)
+
+
  
-## Garage Door Opener Blueprint
+## Ring Keypad Garage Door Opener
  
 **Garage Door Keypad with Keymaster or User Provided Codes** - This Blueprint will validate the codes entered into the keypad against those of your Keymaster codes that are currently active, or against a string of codes you provide (if no Keymaster code sensors are detected). Learn more about [KeyMaster](https://github.com/FutureTense/keymaster) here.
 
