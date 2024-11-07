@@ -1,17 +1,17 @@
 # Keypad Blueprints for Home Assistant
 
-Home Assistant blueprints to easily configure either the keypad dashboard cards, or a physical Ring Keypad V2, to use Keymaster codes to control your Alarmo integration or a garage door/cover.
+Home Assistant blueprints to use [KeyMaster](https://github.com/FutureTense/keymaster) codes with Alarmo via dashboard cards or a Ring Keypad V2. Also includes a blueprint to use the Ring Keypad v2 as garage door open using Keymaster or user provided codes.
 
 *These blueprints were derived from the great work by [@imsorrybutwho](https://github.com/ImSorryButWho/HomeAssistantNotes) for Ring keypads with the Alarmo integration.  
 
 
-### Keypad Performance
+### Ring Keypad Performance
 * By default the motion detector in the keypad has a reset timer of two seconds, which can cause it to flood the zwave network and make the keypad appear to have connection issues.  To address this you need  to go to the device page and update the configuration for parameter 26 Motion Sensor Timeout with a larger number (e.g. 30). 
 * For the best connection, you'll want the keypad connected directly to the controller rather than hopping through other zwave relays (if possible). 
 
 
-## Alarmo + Keymaster w/ Dashboard Keypad Card
-**Alarmo lovelace keypad card with Keymaster** - This blueprint allows you to use Keymaster codes on the digital keypad for the alarm card or the custom:Alarmo card, to controll your Alarmo alarm. 
+## Alarmo with Keymaster codes
+**For Alarmo custom lovelace card** - This blueprint allows you to use Keymaster codes on the digital keypad for [custom:Alarmo card](https://github.com/nielsfaber/alarmo-card), to control your Alarmo alarm. 
 * Supports all Alarmo modes
 * Logs the Code Slot # and the Alarmo alarm action to Logbook, to allow tracking of which users executed Alarm actions. 
 
