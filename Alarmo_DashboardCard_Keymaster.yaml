@@ -1,6 +1,6 @@
 blueprint:
-  name: Key Event Arm/Disarm Alarmo
-  description: "Automation to validate keypad entry events for arming/disarming an Alarmo alarm panel using Keymaster codes."
+  name: Keymaster codes for Alarmo Dashboard Keypad
+  description: "Automation to arm/disarm an Alarmo dashboard card using Keymaster codes."
   domain: automation
   input:
     alarm_panel:
