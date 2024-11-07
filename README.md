@@ -10,7 +10,7 @@ Home Assistant blueprints to easily configure either the keypad dashboard cards,
 * For the best connection, you'll want the keypad connected directly to the controller rather than hopping through other zwave relays (if possible). 
 
 
-## Alarmo + Keymaster w/ Dashboard Keypad Card [Dev]
+## Alarmo + Keymaster w/ Dashboard Keypad Card
 **Alarmo lovelace keypad card with Keymaster** - This blueprint allows you to use Keymaster codes on the digital keypad for the alarm card or the custom:Alarmo card, to controll your Alarmo alarm. 
 * Supports all Alarmo modes
 * Logs the Code Slot # and the Alarmo alarm action to Logbook, to allow tracking of which users executed Alarm actions. 
