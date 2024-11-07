@@ -1,0 +1,67 @@
+blueprint:
+  name: Key Event Arm/Disarm Alarm
+  description: "Arm and Disarm Alarmo using Keymaster codes."
+  domain: automation
+  input:
+    alarm_panel:
+      name: Alarm Panel
+      description: Select the Alarmo alarm panel to control.
+      selector:
+        entity:
+          domain: alarm_control_panel
+    master_code:
+      name: Master Code [Required]
+      description: The code required to arm/disarm the alarm. You must have at least one code set in Alarmo. 
+      selector:
+        text:
+
+trigger:
+  - platform: event
+    event_type: call_service
+    event_data:
+      domain: alarmo
+      service_data:
+        entity_id: !input alarm_panel
+
+condition: []
+
+action:
+  - choose:
+      - conditions:
+          - condition: template
+            value_template: >
+              {% set submitted_code = trigger.event.data.service_data.code %}
+              {% set valid_codes = states.input_text 
+                                   | selectattr('entity_id', 'search', '_lock_code_') 
+                                   | selectattr('state', '!=', 'unknown')  
+                                   | selectattr('state', '!=', '') 
+                                   | map(attribute='state') 
+                                   | list %}
+              {{ submitted_code in valid_codes }}
+        sequence:
+          - choose:
+              - conditions:
+                  - condition: template
+                    value_template: "{{ trigger.event.data.service == 'arm' }}"
+                sequence:
+                  - service: alarmo.arm
+                    data:
+                      code: !input master_code
+                      entity_id: !input alarm_panel
+                      mode: >
+                        {% if trigger.event.data.service_data.mode == 'armed_custom_bypass' %}
+                          custom
+                        {% elif trigger.event.data.service_data.mode.startswith('armed_') %}
+                          {{ trigger.event.data.service_data.mode.split('_')[-1] }}
+                        {% else %}
+                          {{ trigger.event.data.service_data.mode }}
+                        {% endif %}
+              - conditions:
+                  - condition: template
+                    value_template: "{{ trigger.event.data.service == 'disarm' }}"
+                sequence:
+                  - service: alarmo.disarm
+                    data:
+                      code: !input master_code
+                      entity_id: !input alarm_panel
+mode: single
