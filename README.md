@@ -1,4 +1,4 @@
-# Keypad Blueprints for Home Assistant
+# Keymaster & Keypad Blueprints for Home Assistant
 
 Home Assistant blueprints to use [KeyMaster](https://github.com/FutureTense/keymaster) codes with Alarmo, either entered via dashboard cards or a physical Ring Keypad V2. Also includes a blueprint to use the Ring Keypad v2 as garage door open using Keymaster or user provided codes.
 
