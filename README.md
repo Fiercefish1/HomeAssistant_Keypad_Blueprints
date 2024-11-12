@@ -1,4 +1,4 @@
-# Keymaster & Keypad Blueprints for Home Assistant
+# Alarm & Keypad Blueprints for Home Assistant
 A collection of Home Assistant blueprints for controlling alarms, keypads, and garage doors. 
 Rink Keypad blueprints were derived from the great work by [@imsorrybutwho](https://github.com/ImSorryButWho/HomeAssistantNotes) for Ring keypads with the Alarmo integration.  
 
