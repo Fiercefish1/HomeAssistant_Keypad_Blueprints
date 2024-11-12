@@ -1,0 +1,66 @@
+blueprint:
+  name: HomeKit - Alarm Integration
+  description: Trigger Home Assistant alarm actions from HomeKit state changes
+  domain: automation
+  input:
+    alarm_entity:
+      name: Alarm Entity
+      description: Select the alarm entity you want to control via HomeKit.
+      selector:
+        entity:
+          domain: alarm_control_panel
+    alarm_code:
+      name: Alarm Code
+      description: Enter the alarm code to be used for arming/disarming.
+      selector:
+        text:
+
+trigger:
+  - platform: event
+    event_type: homekit_state_change
+    event_data:
+      entity_id: !input alarm_entity
+
+condition: []
+
+action:
+  - choose:
+      - conditions:
+          - condition: template
+            value_template: "{{ trigger.event.data.service == 'alarm_arm_home' }}"
+        sequence:
+          - service: alarm_control_panel.alarm_arm_home
+            target:
+              entity_id: !input alarm_entity
+            data:
+              code: !input alarm_code
+      - conditions:
+          - condition: template
+            value_template: "{{ trigger.event.data.service == 'alarm_arm_away' }}"
+        sequence:
+          - service: alarm_control_panel.alarm_arm_away
+            target:
+              entity_id: !input alarm_entity
+            data:
+              code: !input alarm_code
+      - conditions:
+          - condition: template
+            value_template: "{{ trigger.event.data.service == 'alarm_arm_night' }}"
+        sequence:
+          - service: alarm_control_panel.alarm_arm_night
+            target:
+              entity_id: !input alarm_entity
+            data:
+              code: !input alarm_code
+      - conditions:
+          - condition: template
+            value_template: "{{ trigger.event.data.service == 'alarm_disarm' }}"
+        sequence:
+          - service: alarm_control_panel.alarm_disarm
+            target:
+              entity_id: !input alarm_entity
+            data:
+              code: !input alarm_code
+    default: []
+
+mode: single
