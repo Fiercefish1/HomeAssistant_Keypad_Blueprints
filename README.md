@@ -50,7 +50,7 @@ WIth the help of some velcro, minus the back plate, the keypad fits perfectly in
 <img src="images/keypad-box-2.jpg" width="300"> <img src="images/keypad-box.jpg" width="300"><img src="images/keypad-in-box.jpeg" width="300">
 
 ## Homekit Alarm Control
-HomeKit doesn't support codes for arming or disarming alarms.  If you want your alarm to require a code on your panel, but also want to be able to control it with HomeKit then use this blueprint.  It is triggered whenever you change the state of the alarm via HomeKit and automatically submits the corresponding alarm service call with your code.  
+HomeKit doesn't support code input for arming or disarming alarms. *You could configure your HomeKit intgration via YAML in your config file to include a code for your alarm, or you could just use this blueptin.  It is triggered whenever you change the state of the alarm via HomeKit and automatically submits the corresponding alarm service call with the code you provided in the blueprint.  
 
 [![Add Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)]( https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A//raw.githubusercontent.com/Fiercefish1/HomeAssistant_Keypad_Blueprints/refs/heads/main/homekit_alarm.yaml)
 
