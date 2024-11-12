@@ -1,8 +1,12 @@
 # Keymaster & Keypad Blueprints for Home Assistant
+A collection of Home Assistant blueprints for controlling alarms, keypads, and garage doors. 
+Rink Keypad blueprints were derived from the great work by [@imsorrybutwho](https://github.com/ImSorryButWho/HomeAssistantNotes) for Ring keypads with the Alarmo integration.  
 
-Home Assistant blueprints to use [KeyMaster](https://github.com/FutureTense/keymaster) codes with [Alarmo](https://github.com/nielsfaber/alarmo), either entered via dashboard cards or a physical Ring Keypad V2. Also includes a blueprint to use the Ring Keypad v2 as garage door open using Keymaster or user provided codes.
+[Alarmo with Keymaster codes](#alarmo-with-keymaster-codes)  Use [KeyMaster](https://github.com/FutureTense/keymaster) codes with [Alarmo](https://github.com/nielsfaber/alarmo), either entered via dashboard cards or a physical Ring Keypad V2. 
 
-*These blueprints were derived from the great work by [@imsorrybutwho](https://github.com/ImSorryButWho/HomeAssistantNotes) for Ring keypads with the Alarmo integration.  
+[Ring Keypad Garage Door Opener](#ring-keypad-garage-door-opener) Use the Ring Keypad v2 as garage door open using Keymaster or user provided codes.
+
+[Homekit Alarm Control](#homekit-alarm-control) Allow Homekit to arm or disarm your alarm when it requires a code.  
 
 
 ## Alarmo with Keymaster codes
@@ -23,7 +27,7 @@ Currently this only supports the Alarmo integration, but support for the standar
    * Keypad will play it's included sound clips for Alarm behaviors
    * Error tone and keypad flash on invalid code entry
 
-       [![Add Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)]( https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A//raw.githubusercontent.com/Fiercefish1/RingKeypad_Blueprints/refs/heads/main/keypad_alarmo_keymaster.yaml)
+       [![Add Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)]( https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A//raw.githubusercontent.com/Fiercefish1/HomeAssistant_Keypad_Blueprints/refs/heads/main/keypad_alarmo_keymaster.yaml)
 
 
  
@@ -33,7 +37,7 @@ Currently this only supports the Alarmo integration, but support for the standar
 
    * Error tone and keypad flash on invalid code entry
 
-      [![Add Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)]( https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A//raw.githubusercontent.com/Fiercefish1/RingKeypad_Blueprints/refs/heads/main/GarageDoorKeypad_Keymaster.yaml)
+      [![Add Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)]( https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A//raw.githubusercontent.com/Fiercefish1/HomeAssistant_Keypad_Blueprints/refs/heads/main/GarageDoorKeypad_Keymaster.yaml)
 
 ### Ring Keypad Performance
 * By default the motion detector in the keypad has a reset timer of two seconds, which can cause it to flood the zwave network and make the keypad appear to have connection issues.  To address this you need  to go to the device page and update the configuration for parameter 26 Motion Sensor Timeout with a larger number (e.g. 30). 
@@ -44,7 +48,10 @@ WIth the help of some velcro, minus the back plate, the keypad fits perfectly in
 
 <img src="images/keypad-box-2.jpg" width="300"> <img src="images/keypad-box.jpg" width="300"><img src="images/keypad-in-box.jpeg" width="300">
 
+## Homekit Alarm Control
+HomeKit doesn't support codes for arming or disarming alarms.  If you want your alarm to require a code on your panel, but also want to be able to control it with HomeKit then use this blueprint.  It is triggered whenever you change the state of the alarm via HomeKit and automatically submits the corresponding alarm service call with your code.  
 
+[![Add Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)]( https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A//raw.githubusercontent.com/Fiercefish1/HomeAssistant_Keypad_Blueprints/refs/heads/main/homekit_alarm.yaml)
 
 
 
