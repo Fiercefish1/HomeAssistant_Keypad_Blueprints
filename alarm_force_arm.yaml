@@ -1,0 +1,101 @@
+blueprint:
+  name: "Alarmo: Automatic Force Arm"
+  description: "Blueprint for automatically arming Alarmo in a specified mode with force, when there are open sensors"
+  domain: automation
+  input:
+    alarm_entity:
+      name: Alarm Entity
+      description: Select the alarm entity to control.
+      selector:
+        entity:
+          domain: alarm_control_panel
+    alarm_code:
+      name: Alarm Code
+      description: Enter the alarm code to be used for arming/disarming.
+      selector:
+        text:
+
+variables:
+  alarm_entity_id: !input alarm_entity
+
+trigger:
+  - platform: event
+    event_type: call_service
+    event_data:
+      domain: alarmo
+      service: arm
+      service_data:
+        entity_id: !input alarm_entity
+  - platform: event
+    event_type: homekit_state_change
+    event_data:
+      entity_id: !input alarm_entity
+  - platform: event
+    event_type: call_service
+    event_data:
+      domain: alarm_control_panel
+      service_data:
+        entity_id: !input alarm_entity
+
+
+condition:
+  - condition: template
+    value_template: "{{ state_attr(alarm_entity_id, 'open_sensors') is not none }}"
+
+action:
+  - choose:
+        # Choice for Alarmo custom card Arm actions
+      - conditions:
+          - condition: template 
+            value_template: "{{ trigger.event.data.domain == 'alarmo' }}"
+        sequence:
+          - service: alarmo.arm
+            target:
+              entity_id: !input alarm_entity
+            data:
+              code: !input alarm_code
+              mode: >
+                {% if trigger.event.data.service_data.mode == 'armed_custom_bypass' %}
+                  custom
+                {% elif trigger.event.data.service_data.mode.startswith('armed_') %}
+                  {{ trigger.event.data.service_data.mode.split('_')[-1] }}
+                {% else %}
+                  {{ trigger.event.data.service_data.mode }}
+                {% endif %}
+              force: true
+        # Choice for default Alarm card actions
+      - conditions:
+          - condition: template
+            value_template: "{{ trigger.event.data.domain == 'alarm_control_panel' }}"
+        sequence:
+          - service: alarmo.arm
+            target:
+              entity_id: !input alarm_entity
+            data:
+              code: !input alarm_code
+              mode: >
+                {% if trigger.event.data.service.startswith('alarm_arm_') %}
+                  {{ trigger.event.data.service.split('_')[-1] }}
+                {% else %}
+                  {{ trigger.event.data.service }}
+                {% endif %}
+              force: true
+        # Choice for Homekit Arm actions
+      - conditions:
+          - condition: template
+            value_template: "{{ trigger.event.event_type == 'homekit_state_change' }}"
+        sequence:
+          - service: alarmo.arm
+            target:
+              entity_id: !input alarm_entity
+            data:
+              code: !input alarm_code
+              mode: >
+                {% if trigger.event.data.service.startswith('alarm_arm_') %}
+                  {{ trigger.event.data.service.split('_')[-1] }}
+                {% else %}
+                  {{ trigger.event.data.service }}
+                {% endif %}
+              force: true
+
+mode: single
