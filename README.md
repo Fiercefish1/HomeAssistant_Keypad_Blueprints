@@ -13,7 +13,7 @@ A collection of Home Assistant blueprints for controlling alarms, keypads, and g
 ## Alarmo with Keymaster codes
 Instead of having to manage two sets of codes for users in Alarmo and Keymaster, these blueprints will validate any code input events on the digital or physical keypads against active Keyaster codes before executing the desired alarm action.
 
-1) **For Dashboard Alarm-Keypad cards** - This blueprint allows you to use Keymaster codes entered with the [custom:Alarmo card](https://github.com/nielsfaber/alarmo-card), to control your Alarmo control panel. Currently this only supports the Alarmo integration and the custom Alarmo card, but support for the standard HA Alarm and default alarm cards will be added in the future.
+1) **For Dashboard Alarm Control Panel cards** - This blueprint allows you to use Keymaster codes entered with the [custom:Alarmo card](https://github.com/nielsfaber/alarmo-card), to control your Alarmo control panel. Currently this only supports the Alarmo integration and the custom Alarmo card, but support for the standard HA Alarm and default alarm cards will be added in the future.
    
    * Supports all Alarmo modes
    * Logs the Code Slot # and the Alarmo alarm action to Logbook, to allow tracking of which users executed Alarm actions. 
