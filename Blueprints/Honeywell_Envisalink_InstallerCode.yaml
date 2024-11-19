@@ -1,0 +1,124 @@
+blueprint:
+  name: Brute Force Installer Code
+  description: >
+    A blueprint to brute force the installer code on a Honeywell panel
+    using the Envisalink integration. 
+  domain: automation
+  input:
+    alarm_entity:
+      name: Alarm Entity
+      description: The entity ID of the alarm control panel.
+      selector:
+        entity:
+          domain: alarm_control_panel
+    keypad_sensor:
+      name: Keypad Sensor
+      description: The entity ID of the keypad sensor (e.g., for checking responses).
+      selector:
+        entity:
+          domain: sensor
+    user_code_sensor:
+      name: User Code Sensor
+      description: The entity ID of the user code sensor (for disarm).
+      selector:
+        entity:
+          domain: sensor
+    code_start:
+      name: Starting Code
+      description: The starting value of the brute force range.
+      default: 0000
+      selector:
+        number:
+          min: 0
+          max: 9999
+          unit_of_measurement: ''
+          step: 1
+    code_stop:
+      name: Ending Code
+      description: The ending value of the brute force range.
+      default: 9999
+      selector:
+        number:
+          min: 0
+          max: 9999
+          unit_of_measurement: ''
+          step: 1
+    delay_seconds:
+      name: Delay Between Attempts
+      description: The delay in seconds between keypress attempts.
+      default: 3
+      selector:
+        number:
+          min: 1
+          max: 60
+          unit_of_measurement: seconds
+          step: 1
+    notify_device:
+      name: Notification Device
+      description: The device to send notifications to.
+      selector:
+        entity:
+          domain: notify
+
+variables:
+  start_code: !input code_start
+  end_code: !input code_stop
+  delay_seconds: !input delay_seconds
+
+trigger:
+  - platform: event
+    event_type: start_brute_force
+
+action:
+  - service: !input notify_device
+    data:
+      message: Starting loop code entry...
+  - repeat:
+      count: "{{ (end_code - start_code + 1) }}"
+      sequence:
+        - service: envisalink.alarm_keypress
+          data:
+            entity_id: !input alarm_entity
+            keypress: >-
+              {{ '%04d' | format(start_code + repeat.index - 1) }}800
+        - delay:
+            seconds: "{{ delay_seconds }}"
+        - choose:
+            - conditions:
+                - condition: template
+                  value_template: >-
+                    {{ 'installer code' in states(!input keypad_sensor) | lower }}
+              sequence:
+                - service: !input notify_device
+                  data:
+                    message: >-
+                      Installer code found: {{ '%04d' |
+                      format(start_code + repeat.index - 1) }}
+                - delay:
+                    seconds: 4
+                - service: envisalink.alarm_keypress
+                  data:
+                    entity_id: !input alarm_entity
+                    keypress: "*99"
+            - conditions:
+                - condition: template
+                  value_template: >-
+                    {{ not 'ready to arm' in states(!input keypad_sensor) | lower() 
+                    and not 'fault' in states(!input keypad_sensor) | lower() }}
+              sequence:
+                - service: !input notify_device
+                  data:
+                    message: >-
+                      Alarm state changed: {{ states(!input keypad_sensor) }}
+        - condition: template
+          value_template: "{{ repeat.index % 3 == 0 }}"
+        - service: alarm_control_panel.alarm_disarm
+          data:
+            code: "{{ states(!input user_code_sensor) }}"
+          target:
+            entity_id: !input alarm_entity
+        - delay:
+            seconds: 3
+  - service: !input notify_device
+    data:
+      message: All codes tried or loop stopped.
