@@ -3,11 +3,11 @@ A collection of Home Assistant blueprints for controlling alarms, keypads, and g
 
 *Ring Keypad blueprints were derived from the great work by [@imsorrybutwho](https://github.com/ImSorryButWho/HomeAssistantNotes) for Ring keypads with the Alarmo integration.  
 
-[Alarmo with Keymaster codes](#alarmo-with-keymaster-codes)  Use [KeyMaster](https://github.com/FutureTense/keymaster) codes with [Alarmo](https://github.com/nielsfaber/alarmo), either entered via dashboard cards or a physical Ring Keypad V2. 
+[Alarmo with Keymaster codes](#alarmo-with-keymaster-codes) - Use [KeyMaster](https://github.com/FutureTense/keymaster) codes with [Alarmo](https://github.com/nielsfaber/alarmo), either entered via dashboard cards or a physical Ring Keypad V2. 
 
-[Ring Keypad Garage Door Opener](#ring-keypad-garage-door-opener) Use the Ring Keypad v2 as garage door open using Keymaster or user provided codes.
+[Ring Keypad Garage Door Opener](#ring-keypad-garage-door-opener) - Use the Ring Keypad v2 as garage door open using Keymaster or user provided codes.
 
-[Homekit Alarm Control](#homekit-alarm-control) Allow Homekit to arm or disarm your alarm when it requires a code.  
+[Homekit Alarm Control](#homekit-alarm-control) - Allow Homekit to arm or disarm your alarm when it requires a code.  
 
 
 ## Alarmo with Keymaster codes
@@ -50,7 +50,7 @@ WIth the help of some velcro, minus the back plate, the keypad fits perfectly in
 <img src="images/keypad-box-2.jpg" width="300"> <img src="images/keypad-box.jpg" width="300"><img src="images/keypad-in-box.jpeg" width="300">
 
 ## Homekit Alarm Control
-HomeKit doesn't support code input for arming or disarming alarms. *You could configure your HomeKit intgration via YAML in your config file to include a code for your alarm, or you could just use this blueptin.  It is triggered whenever you change the state of the alarm via HomeKit and automatically submits the corresponding alarm service call with the code you provided in the blueprint.  
+HomeKit doesn't support code input for arming or disarming alarms. *You could configure your HomeKit intgration via YAML in your config file to include a code for your alarm, or you could just use this blueprint.  It is triggered whenever you change the state of the alarm via HomeKit and automatically submits the corresponding alarm service call with the code you provided in the blueprint.  
 
 [![Add Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)]( https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A//raw.githubusercontent.com/Fiercefish1/HomeAssistant_Keypad_Blueprints/refs/heads/main/homekit_alarm.yaml)
 
