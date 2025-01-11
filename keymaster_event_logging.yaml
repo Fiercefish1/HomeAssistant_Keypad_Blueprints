@@ -21,11 +21,4 @@ action:
   - service: logbook.log
     data:
       name: "Keymaster Lock Event"
-      message: |
-        Lock: {{ lock_name }}
-        Entity ID: {{ entity_id }}
-        State: {{ state }}
-        Action: {{ action_text }}
-        Code Slot: {{ code_slot }}
-        Code Slot Name: {{ code_slot_name }}
-        Time: {{ time_fired }}
+      message: "{{ lock_name }} was {{ state }} by {{ code_slot_name }}"
