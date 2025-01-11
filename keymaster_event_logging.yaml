@@ -1,0 +1,31 @@
+blueprint:
+  name: Keymaster Lock Event Logger
+  description: Logs keymaster lock/unlock events with details like code_slot_name, code_slot, action_text, and the event date to logbook.
+  domain: automation
+  input: {}
+
+trigger:
+  - platform: event
+    event_type: keymaster_lock_state_changed
+
+action:
+  - variables:
+      lock_name: "{{ trigger.event.data.lockname }}"
+      entity_id: "{{ trigger.event.data.entity_id }}"
+      state: "{{ trigger.event.data.state }}"
+      action_text: "{{ trigger.event.data.action_text }}"
+      code_slot: "{{ trigger.event.data.code_slot }}"
+      code_slot_name: "{{ trigger.event.data.code_slot_name }}"
+      time_fired: "{{ trigger.time_fired }}"
+
+  - service: logbook.log
+    data:
+      name: "Keymaster Lock Event"
+      message: |
+        Lock: {{ lock_name }}
+        Entity ID: {{ entity_id }}
+        State: {{ state }}
+        Action: {{ action_text }}
+        Code Slot: {{ code_slot }}
+        Code Slot Name: {{ code_slot_name }}
+        Time: {{ time_fired }}
