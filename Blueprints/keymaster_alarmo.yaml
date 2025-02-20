@@ -1,0 +1,113 @@
+blueprint:
+  name: Use Keymaster codes for Alamro
+  description: "Automation to arm/disarm an Alarmo using Keymaster codes."
+  domain: automation
+  input:
+    alarm_panel:
+      name: Alarm Panel
+      description: Select the Alarmo alarm panel to control.
+      selector:
+        entity:
+          domain: alarm_control_panel
+    master_code:
+      name: Master Code
+      description: The code required to arm/disarm the alarm.
+      selector:
+        text:
+    keymaster_integration_name:
+      name: Keymaster Integration Name
+      description: The name (prefix) used by your Keymaster integration instance
+      selector:
+        text:
+
+variables:
+  integration_prefix: !input keymaster_integration_name
+
+trigger:
+  - platform: event
+    event_type: call_service
+    event_data:
+      domain: alarmo
+      service_data:
+        entity_id: !input alarm_panel
+
+condition: []
+
+action:
+  - choose:
+      - conditions:
+          - condition: template
+            value_template: >
+              {% set submitted_code = trigger.event.data.service_data.code %}
+              {% set valid_codes = states.sensor
+                 | selectattr('entity_id', 'search', '_code_slot_')
+                 | selectattr('entity_id', 'search', integration_prefix)
+                 | selectattr('state', '!=', 'unknown')
+                 | selectattr('state', '!=', '')
+                 | map(attribute='state')
+                 | list %}
+              {{ submitted_code in valid_codes and trigger.event.context.id != this.context.id }}
+        sequence:
+          - choose:
+              - conditions:
+                  - condition: template
+                    value_template: "{{ trigger.event.data.service == 'arm' }}"
+                sequence:
+                  - service: alarmo.arm
+                    data:
+                      code: !input master_code
+                      entity_id: !input alarm_panel
+                      mode: >
+                        {% if trigger.event.data.service_data.mode == 'armed_custom_bypass' %}
+                          custom
+                        {% elif trigger.event.data.service_data.mode.startswith('armed_') %}
+                          {{ trigger.event.data.service_data.mode.split('_')[-1] }}
+                        {% else %}
+                          {{ trigger.event.data.service_data.mode }}
+                        {% endif %}
+              - conditions:
+                  - condition: template
+                    value_template: "{{ trigger.event.data.service == 'disarm' }}"
+                sequence:
+                  - service: alarmo.disarm
+                    data:
+                      code: !input master_code
+                      entity_id: !input alarm_panel
+
+          # Logging action for arm/disarm events
+          - choose:
+              - conditions:
+                  - condition: template
+                    value_template: "{{ trigger.event.data.service == 'arm' }}"
+                sequence:
+                  - service: logbook.log
+                    data:
+                      name: "Alarmo"
+                      message: >
+                        {% set submitted_code = trigger.event.data.service_data.code %}
+                        {% set matched_slot = states.sensor
+                           | selectattr('entity_id', 'search', '_code_slot_')
+                           | selectattr('entity_id', 'search', integration_prefix)
+                           | selectattr('state', 'eq', submitted_code)
+                           | map(attribute='entity_id')
+                           | first %}
+                        {% set slot_number = matched_slot.split('_')[-1] if matched_slot else 'unknown' %}
+                        Alarmo armed_{{ trigger.event.data.service_data.mode.split('_')[-1] }} by Keymaster code_slot_{{ slot_number }}
+              - conditions:
+                  - condition: template
+                    value_template: "{{ trigger.event.data.service == 'disarm' }}"
+                sequence:
+                  - service: logbook.log
+                    data:
+                      name: "Alarmo"
+                      message: >
+                        {% set submitted_code = trigger.event.data.service_data.code %}
+                        {% set matched_slot = states.sensor
+                           | selectattr('entity_id', 'search', '_code_slot_')
+                           | selectattr('entity_id', 'search', integration_prefix)
+                           | selectattr('state', 'eq', submitted_code)
+                           | map(attribute='entity_id')
+                           | first %}
+                        {% set slot_number = matched_slot.split('_')[-1] if matched_slot else 'unknown' %}
+                        Alarmo disarmed by Keymaster code_slot_{{ slot_number }}
+mode: single
