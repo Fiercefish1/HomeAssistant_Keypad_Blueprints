@@ -1,5 +1,5 @@
 blueprint:
-  name: Use Keymaster codes for Alamro
+  name: Use Keymaster codes for Alarmo
   description: "Automation to arm/disarm an Alarmo using Keymaster codes."
   domain: automation
   input:
